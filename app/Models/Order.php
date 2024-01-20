@@ -45,6 +45,11 @@ class Order extends Model
         return $this->belongsTo(Package::class);
     }
 
+    public function orderlines()
+    {
+        return $this->hasMany(Orderline::class);
+    }
+
     public function updateTotalPrice()
     {
         // Calculate the total price based on the associated products and their quantities

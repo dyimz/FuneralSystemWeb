@@ -252,25 +252,24 @@ class MobileController extends Controller
 
     public function addToCart(Request $request)
     {
-        $customer = Customer::where('id', $request->customerID)->first();
-        $user = User::where('id', $customer->user_id)->first();
-        $cart = Cart::where('user_id', $user->id)->first();
-        $product = Product::where('id', $request->productID)->first();
+        $customer = Customer::where('id', $request->customerID)->first();           // customer info
+        $user = User::where('id', $customer->user_id)->first();                     // user info
+        $cart = Cart::where('user_id', $user->id)->first();                         // cart details
+        $product = Product::where('id', $request->productID)->first();              // product details
 
-        $existingProduct = $cart->products()->where('product_id', $request->productID)->first();
+        $existingProduct = $cart->products()->where('product_id', $request->productID)->first();    // check if product is already in cart
         
-
         if ($existingProduct) {
             // If the product is already in the cart, update the quantity
             $existingProduct->pivot->update([
-                'quantity' => $existingProduct->pivot->quantity + 1,
+                'quantity' => $existingProduct->pivot->quantity + 1,                // add 1 quantity if in cart
             ]);
         } else {
             // If the product is not in the cart, add it with quantity 1
-            $cart->products()->attach($product, ['quantity' => 1]);
+            $cart->products()->attach($product, ['quantity' => 1]);                 // add if not yet in cart
         }
 
-        $cart->updateTotalPrice();
+        $cart->updateTotalPrice();                                                  // edit total price
 
         return response()->json(['message' => 'success'], 200);
     }
@@ -281,7 +280,7 @@ class MobileController extends Controller
         $customercart = Cart::where('user_id', $customer->user_id)->first();        // cart -> id = 5
         // Log::info($customercart->products);   
 
-        $products = $customercart->products;
+        $products = $customercart->products;                                        // products in cart
         $cartData = [];
 
         foreach ($products as $product) {
@@ -314,55 +313,60 @@ class MobileController extends Controller
         $customercart = Cart::where('user_id', $customer->user_id)->first();        // cart -> id = 5
         $product = Product::where('id', $request->productID)->first();
 
-        $customercart->products()->detach($product);
-
+        $customercart->products()->detach($product);                                // remove to cart
+        $customercart->updateTotalPrice();                                          // update total
 
         return response()->json(['message' => 'success'], 200);
     }
 
     public function checkout(Request $request)
     {
+        $customer = Customer::where('id', $request->customerID)->first();           // customer -> user_id = 11
+        $customercart = Cart::where('user_id', $customer->user_id)->first();        // cart -> id = 5
+        $products = $customercart->products;                                        // products in cart
 
-        $customer = Cart::where('customerID', $request->customerID)->get();
-        $products = $customer->pluck('productID');
-        $totalPrice = 0;
-
-        foreach ($products as $product) {
-            $cart = Product::where('id', $product)->first();
-            $totalPrice += $cart->price;
-        }
-
-        $order = Order::create([
-            'customerID' => $request->customerID,
+        $order = Order::create([                                                    // create order
+            'user_id' => $customer->user_id,
             'name' => $request->name,
             'address' => $request->address,
             'contact' => $request->contact,
-            'total' => $totalPrice,
+            'discounted' => 'NO',
+            'subtotal' => $customercart->total_price,
+            'total_price' => $customercart->total_price,
             'MOP' => $request->modeofpayment,
             'POP' => $request->proofofpayment,
-            'type' => 'Products',
-            'status' => 'pending'
+            'type' => 'PRODUCTS',
+            'status' => 'PLACED',
+            'paymentstatus' => 'NOT PAYED'
         ]);
-        $orderId = $order->id;
+        $orderId = $order->id;                                                      // get order_id
 
-        foreach ($products as $product) {
-            $item = Product::where('id', $product)->first();
-            $orderline = Orderline::create([
-                'orderID' => $orderId,
-                'name' => $item->name,
-                'image' => $item->img,
-                'price' => $item->price
-            ]);
+        foreach ($products as $product) {      
+            $orderline = New Orderline;
+            $orderline->order_id = $orderId;
+            $orderline->name = $product->name;
+            $orderline->price = $product->price;
+            $orderline->image = $product->img;
+            $orderline->quantity = $product->pivot->quantity; 
+            $orderline->save();
+            Log::info($orderline);
         }
 
-        $customer = Cart::where('customerID', $request->customerID)->delete();
+        $customercart->products()->detach();                                        // clear cart products
+        
+        $cartTotalReset = Cart::find($customercart->id);                            // update total
+        $cartTotalReset->total_price = 0;
+        $cartTotalReset->save();                                  
 
         return response()->json(['message' => $order],200);
     }
 
     public function orderList($id)
     {
-        $orders = Order::where('customerID', $id)->orderBy('updated_at', 'desc')->get();;
+        $customer = Customer::where('id', $id)->first();                            // customer -> user_id = 11
+        $orders = Order::where('user_id', $customer->user_id)                       // get orders
+                            ->orderBy('updated_at', 'desc')->get();;       
+        // Log::info($orders);
         return response()->json($orders);
     }
 

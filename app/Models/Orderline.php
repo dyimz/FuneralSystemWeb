@@ -15,4 +15,9 @@ class Orderline extends Model
         'image',
         'price'
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
