@@ -55,9 +55,9 @@
       <div class="col-md-6">
         <label class="form-label" for="multicol-country">Category</label>
         {!! Form::select('category', [
-         'Starter' => 'Starter', 
-         'Basic' => 'Basic', 
-         'Premium' => 'Premium', 
+         'EMBALMING' => 'EMBALMING', 
+         'CREMATION' => 'CREMATION', 
+         'ALL IN' => 'ALL IN', 
          ], $package->category, ['class' => 'select2 form-select', 'id' => 'category', 'placeholder' => 'Select the appropriate information', 'required' => 'required']) !!}
       </div>
 

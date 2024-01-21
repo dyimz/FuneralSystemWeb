@@ -6,13 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Models\Service;
 use App\Models\Deceased;
+use App\Models\Notification;
 use App\Models\Order;
+use App\Models\Orderline;
 use Yajra\Datatables\Datatables;
 use App\Rules\UniqueServicesForPackage;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use DateTime;
 use Illuminate\Validation\Rule;
+use App\Events\CremationNotify;
 
 class PackageController extends Controller
 {
@@ -196,6 +199,7 @@ class PackageController extends Controller
 
         //Create Deceased
         $dead = new Deceased;
+        $dead->customer_id = $user->customer->id;
         $dead->fname = $request->fname;
         $dead->mname = $request->mname;
         $dead->lname = $request->lname;
@@ -220,6 +224,27 @@ class PackageController extends Controller
         $dead->addresscemetery = $request->addresscemetery;
         $dead->nameFather = $request->nameFather;
         $dead->nameMother = $request->nameMother;
+        $dead->idtype = $request->idtype;
+
+        if($request->hasFile('image')){
+            $img_path = $request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('public/images', $img_path);
+            $image = 'storage/images/'.$img_path;
+        }
+
+        if($request->hasFile('validid')){
+            $img_path = $request->file('validid')->getClientOriginalName();
+            $request->file('validid')->storeAs('public/images', $img_path);
+            $validid = 'storage/images/'.$img_path;
+            $dead->validid = $validid;
+        }
+
+        if($request->hasFile('transferpermit')){
+            $img_path = $request->file('transferpermit')->getClientOriginalName();
+            $request->file('transferpermit')->storeAs('public/images', $img_path);
+            $transferpermit = 'storage/images/'.$img_path;
+            $dead->transferpermit = $transferpermit;
+        }
 
         if($request->hasFile('transferpermit')){
             $img_path = $request->file('transferpermit')->getClientOriginalName();
@@ -230,15 +255,16 @@ class PackageController extends Controller
             $img_path = $request->file('swabtest')->getClientOriginalName();
             $request->file('swabtest')->storeAs('public/images', $img_path);
             $swabtest = 'storage/images/'.$img_path;
+            $dead->swabtest = $swabtest;
         }
         if($request->hasFile('proofofdeath')){
             $img_path = $request->file('proofofdeath')->getClientOriginalName();
             $request->file('proofofdeath')->storeAs('public/images', $img_path);
             $proofofdeath = 'storage/images/'.$img_path;
+            $dead->proofofdeath = $proofofdeath;
         }
-        $dead->transferpermit = $transferpermit;
-        $dead->swabtest = $swabtest;
-        $dead->proofofdeath = $proofofdeath;
+
+        $dead->image = $image;
         $dead->save();
 
         if($request->mop == 'GCASH') {
@@ -257,15 +283,16 @@ class PackageController extends Controller
         $order->address = $user->customer->address;
         $order->contact = $user->customer->contact;
         $order->subtotal = $package->price;
-
-        if($user->customer->verified)
-        {
-            $order->total_price = $package->price * 0.8;
-            $order->discounted = 'YES';
-        } else {
-            $order->total_price = $package->price;
-            $order->discounted = 'NO';
-        }
+        $order->discounted = 'NO';
+        $order->total_price = $package->price;
+        // if($user->customer->verified)
+        // {
+        //     $order->total_price = $package->price * 0.8;
+        //     $order->discounted = 'YES';
+        // } else {
+        //     $order->total_price = $package->price;
+        //     $order->discounted = 'NO';
+        // }
 
         $order->MOP = $request->mop;
         $order->POP = $POP;
@@ -273,19 +300,40 @@ class PackageController extends Controller
         $order->package_id = $package->id;
         $order->deceased_id = $dead->id;
         $order->status = 'PLACED';
-        $order->paymentstatus = 'NO';
+        $order->paymentstatus = 'NOT PAID';
 
         $order->message = $request->message;
         $order->cascketsize = $request->casketOption;
         $order->formalin = $request->formalin;
         $order->memorialproducts = $request->products;
         $order->makeup = $request->makeup;
+        $order->cremate = $request->cremate;
         $order->note = $request->note;
         $order->locationfrom = $request->locationfrom;
         $order->locationto = $request->locationto;
         $order->durationfrom = $request->durationfrom;
         $order->durationto = $request->durationto;
         $order->save();
+
+        foreach($order->package->services as $service)
+        {
+            $orderline = New Orderline;
+            $orderline->order_id = $order->id;
+            $orderline->name = $service->name;
+            $orderline->price = $service->price;
+            $orderline->save();
+        }
+
+        if($request->cremate === 'YES')
+        {
+            $notify = new Notification;
+            $notify->title = 'Cremation Request!';
+            $notify->description = 'Order #'.$order->id.' requested Cremation for their order.';
+            $notify->save();
+
+            // UNCOMMENT FOR LIVE NOTIFICATION
+            // event(new CremationNotify($order->id));
+        }
 
         return redirect()->route('confirmationPackage', ['order' => $order->id]);
         // dd("Order Placed");

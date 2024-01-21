@@ -89,7 +89,7 @@
             </thead>
             <tbody>
               @if($order->type == 'PACKAGE')
-                @foreach($order->package->services as $service)
+                @foreach($order->orderlines as $service)
                 <tr>
                   <td class="text-truncate"><span class="fw-medium">{{$service->name}}</span></td>
                   <td class="text-truncate">{{$service->price}}</td>
@@ -99,11 +99,11 @@
               @endif
 
               @if($order->type == 'PRODUCTS')
-                @foreach($order->products as $product)
+                @foreach($order->orderlines as $product)
                 <tr>
                   <td class="text-truncate"><span class="fw-medium">{{$product->name}}</span></td>
                   <td class="text-truncate">{{$product->price}}</td>
-                  <td class="text-truncate">{{$product->pivot->quantity}}</td>
+                  <td class="text-truncate">{{$product->quantity}}</td>
                 </tr>
                 @endforeach
               @endif

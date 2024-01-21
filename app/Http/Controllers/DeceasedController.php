@@ -99,29 +99,44 @@ class DeceasedController extends Controller
         $dead->addresscemetery = $request->addresscemetery;
         $dead->nameFather = $request->nameFather;
         $dead->nameMother = $request->nameMother;
+        $dead->idtype = $request->idtype;
+
+        if($request->hasFile('image')){
+            $img_path = $request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('public/images', $img_path);
+            $image = 'storage/images/'.$img_path;
+            $dead->image = $image;
+        }
+
+        if($request->hasFile('validid')){
+            $img_path = $request->file('validid')->getClientOriginalName();
+            $request->file('validid')->storeAs('public/images', $img_path);
+            $validid = 'storage/images/'.$img_path;
+            $dead->validid = $validid;
+        }
 
         if($request->hasFile('transferpermit')){
             $img_path = $request->file('transferpermit')->getClientOriginalName();
             $request->file('transferpermit')->storeAs('public/images', $img_path);
             $transferpermit = 'storage/images/'.$img_path;
+            $dead->transferpermit = $transferpermit;
         }
         if($request->hasFile('swabtest')){
             $img_path = $request->file('swabtest')->getClientOriginalName();
             $request->file('swabtest')->storeAs('public/images', $img_path);
             $swabtest = 'storage/images/'.$img_path;
+            $dead->swabtest = $swabtest;
         }
         if($request->hasFile('proofofdeath')){
             $img_path = $request->file('proofofdeath')->getClientOriginalName();
             $request->file('proofofdeath')->storeAs('public/images', $img_path);
             $proofofdeath = 'storage/images/'.$img_path;
+            $dead->proofofdeath = $proofofdeath;
         }
-        $dead->transferpermit = $transferpermit;
-        $dead->swabtest = $swabtest;
-        $dead->proofofdeath = $proofofdeath;
 
         $dead->save();
 
-        return redirect()->route('deceased.index');
+        return redirect()->back()->with('status', 'Record Updated');
         
     }
 

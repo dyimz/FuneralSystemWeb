@@ -33,7 +33,7 @@ Route::get('/maptest', function () {
     return view('maptest');
 });
 Route::get('/', [LandingController::class, 'index'])->name('landing.index');
-
+Route::get('/showObituary/{dead}', [LandingController::class, 'showObituary'])->name('landing.showObituary');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified', 'role:admin,customer'])->name('dashboard');
@@ -65,7 +65,7 @@ Route::middleware('auth', 'role:customer')->group(function () {
     Route::get('confirmation-package/{order}', [LandingController::class, 'confirmationPackage'])->name('confirmationPackage');
     Route::post('orders', [OrderController::class, 'store'])->name('customer.order.store');
 
-    Route::get('customer/profile/{customer}', [CustomerController::class, 'profile'])->name('customer.profile');
+    Route::get('customer/profile', [CustomerController::class, 'profile'])->name('customer.profile');
 
     Route::get('customer/customerOrders/{customer}', [CustomerController::class, 'customerOrders'])->name('customer.customerOrders');
     Route::get('customer/customerDeads/{customer}', [CustomerController::class, 'customerDead'])->name('customer.customerDead');
@@ -76,6 +76,8 @@ Route::middleware('auth', 'role:customer')->group(function () {
 
     Route::patch('customer/user-update/{user}', [CustomerController::class, 'updateUser'])->name('customer.updateUser');
     Route::patch('customer/update/{customer}', [CustomerController::class, 'update'])->name('customer.update');
+
+    Route::get('customer/cancelOrder/{order}', [OrderController::class, 'cancelOrder'])->name('customer.cancelOrder');
 });
 
 // Route::middleware('auth', 'role:employee')->group(function () {
@@ -158,6 +160,8 @@ Route::middleware('auth', 'role:employee,admin')->group(function () {
     Route::get('/admin/customer/showDead/{deceased}', [CustomerController::class, 'showDead'])->name('admin.customer.showDead');
 
     Route::get('/admin/user/suspend/{user}', [UserController::class, 'suspendStatus'])->name('admin.user.suspend');
+    
+    Route::get('/admin/cancelledOrders', [OrderController::class, 'cancelledOrders'])->name('admin.cancelledOrders');
 
     Route::resource('admin/employees', EmployeeController::class)->only([
         'destroy', 'show', 'store', 'update', 'edit', 'index', 'create',]);

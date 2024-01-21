@@ -52,11 +52,74 @@
 
     <link rel="stylesheet" href="../../../../../../../../../../../../../../../../../../../../../../assets/vendor/libs/bs-stepper/bs-stepper.css" />
     <link rel="stylesheet" href="../../../../../../../../../../../../../../../../../../../../../../assets/vendor/libs/bootstrap-select/bootstrap-select.css" />
-    
-    <link rel="stylesheet" href="../../../../../../../../../../../../../../../../../assets/vendor/libs/nouislider/nouislider.css" />
+
     
     <!-- Helpers -->
     <script src="../../../../../../../../../../../../../../../../../../../../../../assets/vendor/js/helpers.js"></script>
     <script src="../../../../../../../../../../../../../../../../../../../../../../assets/js/config.js"></script>
+
+
+    <!-- FOR PUSHER -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('f84b3cc7205016b1f30d', {
+        cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('notify-channel');
+        channel.bind('notify-event', function(data) {
+
+            // alert(JSON.stringify(data.name));
+
+            var newNotification = document.createElement('li');
+            
+            newNotification.id = 'notificationItem';
+            newNotification.className = 'list-group-item list-group-item-action dropdown-notifications-item';
+
+            // Build the content of the new notification
+            var notificationContent = `
+                <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="avatar">
+                            <img src="../../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle">
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">Cremation Request!</h6>
+                        <p class="mb-0">Order #${data.id} requested Cremation for their order.</p>
+                        <small class="text-muted">a while ago</small>
+                    </div>
+                    <div class="flex-shrink-0 dropdown-notifications-actions">
+                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
+                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="bx bx-x"></span></a>
+                    </div>
+                </div>
+            `;
+
+            // Set the HTML content of the new notification
+            newNotification.innerHTML = notificationContent;
+            // Add a click event listener to the new notification
+
+            newNotification.addEventListener('click', function() {
+                // Navigate to the desired route
+                window.location.href = `/admin/orders/${data.id}/edit`;
+            });
+
+            // Get the notification list and insert the new notification at the beginning
+            var notificationList = document.querySelector('.dropdown-notifications-list ul');
+            notificationList.insertBefore(newNotification, notificationList.firstChild);
+
+            // Update the notifications count badge (if needed)
+            var notificationsCountBadge = document.querySelector('.badge-notifications');
+            notificationsCountBadge.textContent = parseInt(notificationsCountBadge.textContent) + 1;
+
+        });
+
+    </script>
 
 </head>

@@ -31,6 +31,15 @@
   <hr>
 
  <h6>Deceased Information</h6>
+
+  @if(session('status'))
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        {{ session('status') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+      </div>
+    @endif
+
     <div class="row g-3">
       <div class="col-md-4">
         <label class="form-label" for="multicol-first-name">First Name</label>
@@ -140,6 +149,37 @@
         @endif
       </div>
 
+      <div class="col-md-4">
+        <label class="form-label" for="multicol-first-name">ID Type</label>
+          {!! Form::select('idtype', [
+              '' => '-', 
+              'PWD' => 'PWD', 
+              'SENIOR' => 'Senior Citizen ID', 
+            ], $dead->idtype,['class' => 'select form-select']) !!}
+          @if ($errors->has('nameMother'))
+            <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('nameMother') }}</span></small>
+          @endif
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="multicol-first-name">Valid ID</label>
+        <input type="file" id="validid" name="validid" class="form-control"/>
+        @if($dead->validid)
+          <a href="/{{$dead->validid}}" download="Valid-ID-#{{$dead->id}}"><i class="menu-icon tf-icons bx bx-download"></i>Download File</a>
+        @endif
+        @if ($errors->has('validid'))
+          <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('validid') }}</span></small>
+        @endif
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="multicol-first-name">Upload Image (For Obituary)</label>
+        <input type="file" id="image" name="image" class="form-control" value="{{old('name', $dead->image) }}"/>
+        @if ($errors->has('image'))
+          <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('image') }}</span></small>
+        @endif
+      </div>
+
       <div class="col-md-3">
         <label class="form-label" for="multicol-first-name">Father's Name</label>
         <input type="text" id="nameFather" name="nameFather" class="form-control" required value="{{old('name', $dead->nameFather) }}"/>
@@ -155,6 +195,7 @@
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('nameMother') }}</span></small>
         @endif
       </div>
+
     </div>
 
       <hr>
@@ -188,7 +229,7 @@
       <div class="col-md-4">
         <label class="form-label" for="multicol-first-name">Transfer Permit</label>
         <input type="file" id="transferpermit" name="transferpermit" class="form-control" value="{{old('name', $dead->transferpermit) }}"/>
-        <a href="/{{$dead->transferpermit}}" download="TP-#{{$dead->id}}">Download File</a>
+        <a href="/{{$dead->transferpermit}}" download="TP-#{{$dead->id}}"><i class="menu-icon tf-icons bx bx-download"></i>Download File</a>
         @if ($errors->has('transferpermit'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('transferpermit') }}</span></small>
         @endif
@@ -197,7 +238,7 @@
       <div class="col-md-4">
         <label class="form-label" for="multicol-first-name">Swab Test</label>
         <input type="file" id="swabtest" name="swabtest" class="form-control" value="{{old('name', $dead->swabtest) }}"/>
-        <a href="/{{$dead->swabtest}}" download="ST-#{{$dead->id}}">Download File</a>
+        <a href="/{{$dead->swabtest}}" download="ST-#{{$dead->id}}"><i class="menu-icon tf-icons bx bx-download"></i> DownloadFile</a>
         @if ($errors->has('swabtest'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('swabtest') }}</span></small>
         @endif
@@ -206,7 +247,7 @@
       <div class="col-md-4">
         <label class="form-label" for="multicol-first-name">Proof of Death</label>
         <input type="file" id="proofofdeath" name="proofofdeath" class="form-control" value="{{old('name', $dead->proofofdeath) }}"/>
-        <a href="/{{$dead->proofofdeath}}" download="POD-#{{$dead->id}}">Download File</a>
+        <a href="/{{$dead->proofofdeath}}" download="POD-#{{$dead->id}}"><i class="menu-icon tf-icons bx bx-download"></i>Download File</a>
         @if ($errors->has('proofofdeath'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('proofofdeath') }}</span></small>
         @endif

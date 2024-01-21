@@ -72,10 +72,14 @@
                       </div>
 
                       <div class="row g-3 mb-3">
-
                         <div class="col-md-6">
                           <label class="form-label" for="multicol-username">Occupation:</label>
                           <input type="text" id="multicol-username" class="form-control" name="occupation" required/>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label class="form-label" for="multicol-username">Upload Image (for Obituary):</label>
+                          <input type="file" id="multicol-username" class="form-control" name="image" required/>
                         </div>
                       </div>
 
@@ -127,6 +131,23 @@
                         </div>
                       </div>
 
+                      <h5>Leave blank if not applicable</h5>
+
+                      <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                          <label class="form-label" for="multicol-username">ID Type:</label>
+                          <select id="" class="select form-select" name="idtype">
+                            <option value="">-</option>
+                            <option value="PWD">PWD ID</option>
+                            <option value="SENIOR">Senior Citizen ID</option>
+                          </select>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label class="form-label" for="multicol-username">Upload (PWD or Senior Citizens ID):</label>
+                          <input type="file" id="multicol-username" class="form-control" name="validid"/>
+                        </div>
+                      </div>
                       
                     <hr class="my-4">
                     <h5>Death Information</h5>
@@ -328,6 +349,20 @@
                       </div>
 
                       <div class="row g-3 mb-3">
+                        <label class="form-label" for="multicol-first-name">Do you want to cremate the decased?</label>
+                        <div class="col-md-12 mt-0">
+                          <div class="form-check form-check-inline mt-0">
+                            <input class="form-check-input" type="radio" name="cremate" id="cremate1" value="YES" required/>
+                            <label class="form-check-label" for="cremate1">Yes</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="cremate" id="cremate2" value="NO" required/>
+                            <label class="form-check-label" for="cremate2">No</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row g-3 mb-3">
                         <div class="col-md-12">
                           <label class="form-label" for="multicol-first-name">Note:</label>
                           <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="note"></textarea>
@@ -360,6 +395,17 @@
                           <input type="datetime-local" id="multicol-username" name="durationto" class="form-control" required/>
                         </div>
                       </div>
+
+                      <div class="row g-3 mb-3">
+                        <div class="col-md-12">
+                          <label class="form-label" for="multicol-first-name">Obituary Description:</label>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="description"></textarea>
+                          @if ($errors->has('description'))
+                            <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('description') }}</span></small>
+                          @endif
+                        </div>
+                      </div>
+
                       
                       <hr class="mb-4 mt-2">
                       

@@ -80,7 +80,7 @@
       
       <div class="col-md-6">
         <label class="form-label" for="multicol-first-name">Size</label>
-        <input type="text" id="size" name="size" class="form-control" placeholder="Size" required value="{{old('size', $product->size) }}"/>
+        <input type="text" id="size" name="size" class="form-control" placeholder="Size" value="{{old('size', $product->size) }}"/>
         @if ($errors->has('size'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('size') }}</span></small>
         @endif
@@ -88,7 +88,7 @@
 
       <div class="col-md-6">
         <label class="form-label" for="multicol-first-name">Capacity</label>
-        <input type="text" id="capacity" name="capacity" class="form-control" placeholder="Capacity" required value="{{old('capacity', $product->capacity) }}"/>
+        <input type="text" id="capacity" name="capacity" class="form-control" placeholder="Capacity" value="{{old('capacity', $product->capacity) }}"/>
         @if ($errors->has('capacity'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('capacity') }}</span></small>
         @endif
@@ -96,7 +96,7 @@
 
       <div class="col-md-6">
         <label class="form-label" for="multicol-first-name">Weight</label>
-        <input type="text" id="weight" name="weight" class="form-control" placeholder="Weight" required value="{{old('weight', $product->weight) }}"/>
+        <input type="text" id="weight" name="weight" class="form-control" placeholder="Weight" value="{{old('weight', $product->weight) }}"/>
         @if ($errors->has('weight'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('weight') }}</span></small>
         @endif

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Models\Service;
 use Yajra\Datatables\Datatables;
+use Illuminate\Validation\Rule;
 
 class ServiceController extends Controller
 {
@@ -84,9 +85,9 @@ class ServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Service $service)
     {
-
+        return view('admin.services.edit',compact('service'));
     }
 
     /**
@@ -94,6 +95,30 @@ class ServiceController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('services')->ignore($id),],
+            'price' => 'required|numeric|min:0',
+        ],
+        [
+            'name.unique' => 'Product name already used.',
+            'name.required' => 'Product name is required.',
+
+            'price.required' => 'The price field is required.',
+            'price.numeric' => 'The price must be a numeric value.',
+            'price.min' => 'The price must not be a negative number.',
+    ]);
+    
+    // try{
+        
+        $updates = [
+            'name' => $request->name,
+            'price' => $request->price,
+        ];
+
+        Service::where('id', $id)->update($updates);
+            
+        return redirect()->route('services.index')->with('success');
+
     }
 
     /**

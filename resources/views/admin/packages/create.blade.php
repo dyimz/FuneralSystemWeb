@@ -50,11 +50,11 @@
 
       <div class="col-md-6">
         <label class="form-label" for="multicol-country">Category</label>
-        <select id="Category" class="select2 form-select" name="category" data-allow-clear="true">
-          <option value="">Select</option>
-          <option value="Starter">Starter</option>
-          <option value="Basic">Basic</option>
-          <option value="Premium">Premium</option>
+        <select id="Category" class="select form-select" name="category" data-allow-clear="true">
+          <option value="">-</option>
+          <option value="EMBALMING">EMBALMING</option>
+          <option value="CREMATION">CREMATION</option>
+          <option value="ALL IN">ALL IN</option>
         </select>
         @if ($errors->has('category'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('category') }}</span></small>
