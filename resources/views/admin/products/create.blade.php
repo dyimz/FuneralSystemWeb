@@ -81,7 +81,7 @@
 
       <div class="col-md-6">
         <label class="form-label" for="multicol-first-name">Size <medium class="text-light fw-medium"><em>(cm)</em></medium></label>
-        <input type="text" id="size" name="size" class="form-control" placeholder="Size" required/>
+        <input type="text" id="size" name="size" class="form-control" placeholder="Size"/>
         @if ($errors->has('size'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('size') }}</span></small>
         @endif
@@ -89,7 +89,7 @@
 
       <div class="col-md-6">
         <label class="form-label" for="multicol-first-name">Capacity <medium class="text-light fw-medium"><em>(cubic cm)</em></medium></label>
-        <input type="text" id="capacity" name="capacity" class="form-control" placeholder="Capacity" required/>
+        <input type="text" id="capacity" name="capacity" class="form-control" placeholder="Capacity"/>
         @if ($errors->has('capacity'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('capacity') }}</span></small>
         @endif
@@ -97,7 +97,7 @@
 
       <div class="col-md-6">
         <label class="form-label" for="multicol-first-name">Weight<medium class="text-light fw-medium"><em>(kg)</em></medium></label>
-        <input type="text" id="weight" name="weight" class="form-control" placeholder="Weight" required/>
+        <input type="text" id="weight" name="weight" class="form-control" placeholder="Weight"/>
         @if ($errors->has('weight'))
           <small class="text-light fw-medium"><span class="badge bg-label-danger">{{ $errors->first('weight') }}</span></small>
         @endif

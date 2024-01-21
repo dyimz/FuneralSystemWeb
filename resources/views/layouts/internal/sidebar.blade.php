@@ -41,7 +41,7 @@
 </li>
 
 
-        <li class="{{ Request::is('admin/orders*') ? 'menu-item open active' : 'menu-item' }}">
+        <li class="{{ Request::is('admin/orders*', 'admin/cancelledOrders') ? 'menu-item open active' : 'menu-item' }}">
           <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-shopping-bag"></i>
             <div class="text-truncate" data-i18n="Orders">Orders</div>
@@ -52,6 +52,13 @@
                 <div class="text-truncate" data-i18n="Order List">Order List</div>
               </a>
             </li>
+
+            <li class="menu-item {{'admin/cancelledOrders' == request()->path() ? 'active': ''}}">
+              <a href="{{route('admin.cancelledOrders')}}" class="menu-link">
+                <div class="text-truncate" data-i18n="Cancelled Order List">Cancelled Order List</div>
+              </a>
+            </li> 
+
           </ul>
         </li>
 

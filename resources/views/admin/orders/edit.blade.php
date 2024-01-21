@@ -43,179 +43,203 @@
           <!-- <h6 class="m-0"><a href=" javascript:void(0)">Edit</a></h6> -->
         </div>
 
-        @if($order->type == 'PACKAGE')
         <div class="card-body">
-          <h6 >Deceased Name: {{$order->deceased->fname}} {{$order->deceased->lname}} <a href="{{route('deceased.edit', $order->deceased_id)}}">ID#{{$order->deceased_id}}</a></h6>
-        </div>
-        @endif
-        
-        <div class="card-datatable table-responsive">
+          @if($order->type == 'PACKAGE')
+            <h6 >Deceased Name: <a href="{{route('deceased.edit', $order->deceased_id)}}">{{$order->deceased->fname}} {{$order->deceased->lname}}</a></h6>
+          @endif
 
+          
           @if(session('status'))
-            <div class="alert alert-warning alert-dismissible" role="alert">
-              {{ session('status') }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-              </button>
-            </div>
-          @endif
-
-          @if($order->type === 'PRODUCTS')
-            <table class="datatables-order-details table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th class="w-50">Product</th>
-                  <th class="w-25">Price</th>
-                  <th class="w-25">Qty</th>
-                  <th>total</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($order->products as $prod)
-                  <tr>      
-                    <th></th>
-                    <th></th>
-                    <th>{{$prod->name}}</th>
-                    <th>{{$prod->price}}</th>
-                    <th>{{$prod->pivot->quantity}}</th>
-                    <th>{{$prod->price * $prod->pivot->quantity}}</th>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
-
-            <div class="d-flex justify-content-end align-items-center m-3 mb-2 p-1">
-              <div class="order-calculations">
-
-                  <div class="d-flex justify-content-between mb-2">
-                    <span class="w-px-100">Subtotal:</span>
-                    <span class="text-heading">₱ {{$order->total_price - 50}}</span>
-                  </div>
-
-                  <div class="d-flex justify-content-between mb-2">
-                    <span class="w-px-100">Delivery Fee:</span>
-                    <span class="text-heading mb-0">₱ 50</span>
-                  </div>
-
-                  <div class="d-flex justify-content-between">
-                    <h6 class="w-px-100 mb-0">Total:</h6>
-                    <h6 class="mb-0">₱ {{$order->total_price}}</h6>
-                  </div>
+              <div class="alert alert-primary alert-dismissible" role="alert">
+                {{ session('status') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+              </div>
+            @endif
           
-              </div>
-            </div>
-          @endif
+          <div class="card-datatable table-responsive">
 
-          @if($order->type === 'PACKAGE')
-            <table class="datatables-order-details table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th class="w-50">Inclusion</th>
-                  <th class="w-25">Price</th>
-                  <th class="w-25"></th>
-                  <th>total</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($order->package->services as $serv)
-                  <tr>      
+            @if($order->type === 'PRODUCTS')
+              <table class="datatables-order-details table">
+                <thead>
+                  <tr>
                     <th></th>
                     <th></th>
-                    <th>{{$serv->name}}</th>
-                    <th>{{$serv->price}}</th>
-                    <th></th>
-                    <th>{{$serv->price}}</th>
+                    <th class="w-50">Product</th>
+                    <th class="w-25">Price</th>
+                    <th class="w-25">Qty</th>
+                    <th>total</th>
                   </tr>
-                @endforeach
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  @foreach($order->orderlines as $prod)
+                    <tr>      
+                      <th></th>
+                      <th></th>
+                      <th>{{$prod->name}}</th>
+                      <th>{{$prod->price}}</th>
+                      <th>{{$prod->quantity}}</th>
+                      <th>{{$prod->price * $prod->quantity}}</th>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
 
-            <div class="d-flex justify-content-end align-items-center m-3 mb-2 p-1">
-              <div class="order-calculations">
-                  <div class="d-flex justify-content-between">
-                    <h6 class="w-px-100 mb-0">Total:</h6>
-                    <h6 class="mb-0">₱ {{$order->total_price}}</h6>
-                  </div>
+              <div class="d-flex justify-content-end align-items-center m-3 mb-2 p-1">
+                <div class="order-calculations">
+
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="w-px-100">Subtotal:</span>
+                      <span class="text-heading">₱ {{$order->total_price - 50}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="w-px-100">Delivery Fee:</span>
+                      <span class="text-heading mb-0">₱ 50</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                      <h6 class="w-px-100 mb-0">Total:</h6>
+                      <h6 class="mb-0">₱ {{$order->total_price}}</h6>
+                    </div>
+            
+                </div>
               </div>
-            </div>
+            @endif
+
+            @if($order->type === 'PACKAGE')
+              <table class="datatables-order-details table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="w-50">Inclusion</th>
+                    <th class="w-25">Price</th>
+                    <th class="w-25"></th>
+                    <th>total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($order->orderlines as $serv)
+                    <tr>      
+                      <th></th>
+                      <th></th>
+                      <th>{{$serv->name}}</th>
+                      <th>{{$serv->price}}</th>
+                      <th></th>
+                      <th>{{$serv->price}}</th>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+
+              <div class="d-flex justify-content-end align-items-center m-3 mb-2 p-1">
+                <div class="order-calculations">
+
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="w-px-100">Subtotal:</span>
+                      <span class="text-heading">₱ {{$order->subtotal}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                      <span class="w-px-100">Discount:</span>
+                      <span class="text-heading mb-0">- ₱ {{$order->subtotal - $order->total_price}}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                      <h6 class="w-px-100 mb-0">Total:</h6>
+                      <h6 class="mb-0">₱ {{$order->total_price}}</h6>
+                    </div>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="form-label" for="multicol-first-name">Payment Status:</label>
+                    {!! Form::select('paymentstatus', [
+                      'NOT PAID' => 'NOT PAID', 
+                      'PAID (DOWNPAYMENT)' => 'PAID (DOWNPAYMENT)', 
+                      'FULLY PAID' => 'FULLY PAID', 
+                    ], $order->paymentstatus,['class' => 'select form-select', 'required' => 'true']) !!}
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label" for="multicol-first-name">Discounted (20%):</label>
+                    {!! Form::select('discounted', [
+                      'NO' => 'NO', 
+                      'YES' => 'YES', 
+                    ], $order->discounted,['class' => 'select form-select', 'required' => 'true']) !!}
+                  </div>
 
 
+                </div>
+              </div>
+            @else
               <div class="col-md-4">
-                <label class="form-label" for="multicol-first-name">Payment Statu:</label>
-                {!! Form::select('paymentstatus', [
-                  'NOT PAID' => 'NOT PAID', 
-                  'PAID (DOWNPAYMENT)' => 'PAID (DOWNPAYMENT)', 
-                  'FULLY PAID' => 'FULLY PAID', 
-                ], $order->paymentstatus,['class' => 'select form-select', 'required' => 'true']) !!}
+                  <label class="form-label" for="multicol-first-name">Payment Statu:</label>
+                  {!! Form::select('paymentstatus', [
+                    'NOT PAID' => 'NOT PAID', 
+                    'FULLY PAID' => 'FULLY PAID', 
+                  ], $order->paymentstatus,['class' => 'select form-select', 'required' => 'true']) !!}
               </div>
-          @else
-            <div class="col-md-4">
-                <label class="form-label" for="multicol-first-name">Payment Statu:</label>
-                {!! Form::select('paymentstatus', [
-                  'NOT PAID' => 'NOT PAID', 
-                  'FULLY PAID' => 'FULLY PAID', 
-                ], $order->paymentstatus,['class' => 'select form-select', 'required' => 'true']) !!}
-            </div>
-          @endif
-          
-
+            @endif
+            
+        </div>
           <hr>
-
+       
           <!-- Change status -->
           <div class="card-header d-flex justify-content-between align-items-center">
             <label class="form-label" for="multicol-first-name">Status:</label>
               <div class="progress-indicator-container">
                 @if($order->status == 'PREPARING')
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(0)">Placed</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(0)">PLACED</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(1)">PREPARING</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(1)">PREPARING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning" onclick="setStatus(2)">ON-GOING</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setStatus(2)">ON-GOING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning" onclick="setStatus(3)">DONE</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setStatus(3)">DONE</button>
                   <?php $status = 2?>
                 @elseif($order->status == 'ON-GOING')
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(0)">Placed</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(0)">PLACED</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(1)">PREPARING</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(1)">PREPARING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(2)">ON-GOING</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(2)">ON-GOING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning" onclick="setStatus(3)">DONE</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setStatus(3)">DONE</button>
                   <?php $status = 3?>
                 @elseif($order->status == 'DONE')
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(0)">Placed</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(0)">PLACED</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(1)">PREPARING</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(1)">PREPARING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(2)">ON-GOING</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(2)">ON-GOING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(3)">DONE</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(3)">DONE</button>
                   <?php $status = 4?>
                 @else
-                  <button type="button" class="btn btn-outline-warning active" onclick="setStatus(0)">Placed</button>
+                  <button type="button" class="btn btn-outline-primary active" onclick="setStatus(0)">PLACED</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning" onclick="setStatus(1)">PREPARING</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setStatus(1)">PREPARING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning" onclick="setStatus(2)">ON-GOING</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setStatus(2)">ON-GOING</button>
                     <span class="tf-icons bx bx-chevron-right"></span>
-                  <button type="button" class="btn btn-outline-warning" onclick="setStatus(3)">DONE</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="setStatus(3)">DONE</button>
                   <?php $status = 1?>
                 @endif
 
                 <div class="demo-vertical-spacing">
                   <div class="progress">
                   @if($order->status == 'PREPARING')
-                    <div class="progress-bar bg-warning" id="progressBar" role="progressbar" style="width: 33.33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-primary" id="progressBar" role="progressbar" style="width: 33.33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                   @elseif($order->status == 'ON-GOING')
-                    <div class="progress-bar bg-warning" id="progressBar" role="progressbar" style="width: 66.66%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-primary" id="progressBar" role="progressbar" style="width: 66.66%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                   @elseif($order->status == 'DONE')
-                    <div class="progress-bar bg-warning" id="progressBar" role="progressbar" style="width: 99.99%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-primary" id="progressBar" role="progressbar" style="width: 99.99%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                   @else
-                    <div class="progress-bar bg-warning" id="progressBar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-primary" id="progressBar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                   @endif
                   </div>
                 </div>
@@ -225,6 +249,37 @@
           </div>
           <input type="hidden" name="status" id="statusInput" value="{{$status}}">
           <!-- Change status -->
+          
+          @if($order->type === 'PACKAGE')
+            @if($order->formalin == 'YES')
+              <hr> 
+              <div class="card-header">
+                  <h5 class="card-title m-0">Formalin:</h5>
+                </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="form-label" for="multicol-first-name">Extend Formalin (days):</label>
+                    <input type="number" id="extensiondays" name="extensiondays" class="form-control" value="{{old('extensiondays', $order->extensiondays) }}"/>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label" for="multicol-first-name">Extension Price:</label>
+                    <input type="number" id="extensionprice" name="extensionprice" class="form-control" value="{{old('extensionprice', $order->extensionprice) }}"/>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label" for="multicol-first-name">Extension Payment:</label>
+                    {!! Form::select('extensionpayment', [
+                      '' => '-', 
+                      'NOT PAID' => 'NOT PAID', 
+                      'FULLY PAID' => 'FULLY PAID', 
+                    ], $order->extensionpayment,['class' => 'select form-select']) !!}
+                  </div>
+                </div>
+              </div>
+              @endif
+          @endif
 
           @if($order->type === 'PACKAGE')
             <!-- User Request -->
@@ -438,18 +493,28 @@
 <script>
 function setStatus(index) {
         // Remove the 'active' class from all indicators
-        $('.btn-outline-warning').removeClass('active');
+        $('.btn-outline-primary').removeClass('active');
 
         // Add the 'active' class to the clicked indicator and all previous indicators
         for (var i = 0; i <= index; i++) {
-            $('.btn-outline-warning').eq(i).addClass('active');
+            $('.btn-outline-primary').eq(i).addClass('active');
         }
         var progressValue = index * 33.33;
         $('#progressBar').css('width', progressValue + '%');
         
         $('#statusInput').val(index + 1);
     }
-
 </script>
+<script>
+    document.getElementById('extensiondays').addEventListener('input', function() {
+        // Get the entered number of days
+        var numberOfDays = this.value;
 
+        // Calculate the extension price based on the entered number of days
+        var extensionPrice = numberOfDays * 1000; // Adjust the multiplier as needed
+
+        // Set the calculated extension price to the extensionprice input field
+        document.getElementById('extensionprice').value = extensionPrice;
+    });
+</script>
 @endsection

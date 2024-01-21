@@ -1,6 +1,6 @@
 <div style="display:flex;">
 
-<a href="{{ route('products.edit', $id) }}" class="btn rounded-pill btn-icon btn-label-primary">
+<a href="{{ route('services.edit', $id) }}" class="btn rounded-pill btn-icon btn-label-primary">
     <span class="tf-icons bx bx-edit"></span>
 </a>
 

@@ -86,7 +86,7 @@
                                 </thead>
                                 <tbody>
                                 @if($order->type == 'PACKAGE')
-                                    @foreach($order->package->services as $service)
+                                    @foreach($order->orderlines as $service)
                                     <tr>
                                     <td class="text-truncate"><span class="fw-medium">{{$service->name}}</span></td>
                                     <td class="text-truncate">{{$service->price}}</td>
@@ -96,11 +96,11 @@
                                 @endif
 
                                 @if($order->type == 'PRODUCTS')
-                                    @foreach($order->products as $product)
+                                    @foreach($order->orderlines as $product)
                                     <tr>
                                     <td class="text-truncate"><span class="fw-medium">{{$product->name}}</span></td>
                                     <td class="text-truncate">{{$product->price}}</td>
-                                    <td class="text-truncate">{{$product->pivot->quantity}}</td>
+                                    <td class="text-truncate">{{$product->quantity}}</td>
                                     </tr>
                                     @endforeach
                                 @endif
@@ -110,6 +110,10 @@
 
                             <div class="mt-4">
                                 <a href="{{ url()->previous() }}" class="btn btn-secondary me-2">Back</a>
+                                @if($order->status === 'PLACED')
+                                <a href="#" class="btn btn-danger me-2" onclick="confirmCancellation('{{ route('customer.cancelOrder', $order->id) }}')">Cancel Order</a>
+                                @endif
+    
                             </div>
 
                         </div>
@@ -132,5 +136,13 @@
 
 @section('script')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function confirmCancellation(route) {
+        var confirmed = window.confirm('Are you sure you want to cancel this order?');
 
+        if (confirmed) {
+            window.location.href = route;
+        }
+    }
+</script>
 @endsection

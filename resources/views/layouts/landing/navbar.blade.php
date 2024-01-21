@@ -39,12 +39,24 @@
           <li class="nav-item">
             <a class="nav-link fw-medium" href="{{route('customer.products')}}">Products</a>
           </li>
+
           <!-- <li class="nav-item">
             <a class="nav-link fw-medium" href="{{route('customer.packages')}}">Packages</a>
           </li> -->
           @auth
           <li class="nav-item">
             <a class="nav-link fw-medium" href="/chatify">Chat</a>
+          </li>
+
+          <li class="nav-item">
+              <a class="nav-link fw-meduim" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                  <i class="bx bx-power-off me-2"></i>
+                  <span class="align-middle">Log Out</span>
+              </a>
+
+              <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display: none;">
+                  @csrf
+              </form>
           </li>
           @endauth
 
@@ -58,7 +70,19 @@
       <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
         
       @auth
+  
         @if(auth()->user()->role == 'customer')
+        @php
+          $user = auth()->user();
+          $cart = $user->cart;
+          $kart = session()->get('cart', []);
+          $kart[$cart->id] = [
+              'id' => $cart->id,
+              'total_price' => $cart->total_price,
+              'items' => $cart->products,
+          ];
+          session()->put('cart', $kart);
+        @endphp
           @php
             $cartKey = key(session('cart'));
           @endphp
@@ -211,30 +235,32 @@
                     </a>
                   </li>
                   <li>
-                  <form method="POST" action="{{ route('logout') }}">
+
+                    <form method="POST" action="{{ route('logout') }}">
                       @csrf
-                      <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
+                      <button type="submit" class="dropdown-item">
                           <i class="bx bx-power-off me-2"></i>
                           <span class="align-middle">Log Out</span>
-                      </a>
-                  </form>
+                      </button>
+                    </form>
+
                   </li>
                 </ul>
               </li>
               <!--/ User -->
               @endif
             @else
-              <li class="nav-item">
-                <a class="nav-link fw-medium" aria-current="page" href="{{ route('login') }}"><i class="bx bx-log-in"></i> Login</a>
-              </li>
-                <!-- <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a> -->
+
+                <li class="nav-item">
+                  <a class="nav-link fw-medium" href="{{ route('login') }}"><i class="bx bx-log-in"></i> Login</a>
+                </li>
 
               @if (Route::has('register'))
-              <li class="nav-item">
-                <a class="nav-link fw-medium" aria-current="page" href="{{ route('register') }}"><i class="bx bx-dock-top"></i> Register</a>
-              </li>
-                <!-- <a href="{{ route('register') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a> -->
 
+                <li class="nav-item">
+                  <a class="nav-link fw-medium" href="{{ route('register') }}"><i class="bx bx-dock-top"></i> Register</a>
+                </li>
+                
               @endif
 
             @endauth

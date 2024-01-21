@@ -50,7 +50,7 @@
                 spaceBetween: 5,
                 grabCursor: !0,
                 // autoplay: { delay: 3e3, disableOnInteraction: !1 },
-                loop: !0,
+                // loop: !0,
                 loopAdditionalSlides: 1,
                 navigation: {
                     nextEl: ".swiper-button-next",

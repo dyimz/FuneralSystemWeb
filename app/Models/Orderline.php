@@ -10,14 +10,16 @@ class Orderline extends Model
     use HasFactory;
 
     protected $fillable = [
-        'orderID',
+        'order_id',
         'name',
         'image',
-        'price'
+        'price',
+        'quantity',
     ];
 
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
+
 }

@@ -18,7 +18,21 @@ use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
-    public function profile(Customer $customer){
+    public function updateSession(){
+        $user = auth()->user();
+        $cart = $user->cart;
+        $kart = session()->get('cart', []);
+        $kart[$cart->id] = [
+            'id' => $cart->id,
+            'total_price' => $cart->total_price,
+            'items' => $cart->products,
+        ];
+        session()->put('cart', $kart);
+    }
+
+
+    public function profile(){
+        $customer = auth()->user()->customer;
         $deads = Order::where('deceased_id', '!=', null)->where('user_id', $customer->user->id)->get();
         $orders = Order::where('user_id', $customer->user->id)->get();
         
@@ -27,7 +41,7 @@ class CustomerController extends Controller
 
        return view('customer.profile.profile', compact(
         'customer', 'deads', 'orders', 'countdeads', 'countorders'
-    ));
+        ));
     }
 
     public function index(Request $request)
@@ -67,7 +81,7 @@ class CustomerController extends Controller
         if($user->role === 'admin' || $user->role === 'employee'){
             $orders = Order::where('user_id', $id)->get();
         }else{
-            $orders = Order::where('user_id', $user->id)->get();
+            $orders = Order::where('user_id', $user->id)->where('status', '!=', 'CANCELLED')->get();
         }
 
 
@@ -102,9 +116,10 @@ class CustomerController extends Controller
 
     public function showOrder(Order $order)
     {
-        
         $deads = Order::where('deceased_id', '!=', null)->where('user_id', $order->user->id)->get();
         $orders = Order::where('user_id', $order->user->id)->get();
+
+
         // dd($order->user);
         $countdeads = count($deads);
         $countorders = count($orders);
@@ -121,11 +136,9 @@ class CustomerController extends Controller
 
     public function showDead($id)
     {
-
         $dead = Deceased::find($id);
         $deads = Deceased::where('customer_id', $dead->customer_id)->get();
         $orders = Order::where('user_id', $dead->customer->user_id)->get();
-        
         $countdeads = count($deads);
         $countorders = count($orders);
 

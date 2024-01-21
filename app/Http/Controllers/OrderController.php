@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Orderline;
 use Yajra\Datatables\Datatables;
 
 class OrderController extends Controller
@@ -15,7 +16,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = Order::all();
+        $orders = Order::all()->where('status', '!=', 'CANCELLED');
         if ($request->ajax()) {
             $data = $orders;
             return Datatables::of($data)
@@ -39,6 +40,22 @@ class OrderController extends Controller
         return view('admin.orders.index', compact('orders'));
     }
 
+    public function cancelledOrders(Request $request)
+    {
+        // dd('HEY');
+        $orders = Order::all()->where('status', 'CANCELLED');
+        if ($request->ajax()) {
+            $data = $orders;
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', 'admin.orders.action')
+                    ->make();
+        }
+
+        return view('admin.orders.cancelledOrders', compact('orders'));
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -52,7 +69,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-
         if($request->addressRadio == 0){
         }else{
             $request->validate([
@@ -77,7 +93,7 @@ class OrderController extends Controller
                 $contact = $request->contact;
             }
 
-            if($request->MOP = "cod"){
+            if($request->MOP = "CASH"){
                 $POP = null;
             }
             else{
@@ -90,14 +106,8 @@ class OrderController extends Controller
 
             $subtotal = $cart->total_price;
             // dd($request);
-            if($user->customer->verified)
-            {
-                $total_price = ($cart->total_price * 0.8) + 50;
-                $discounted = 'YES';
-            } else {
-                $total_price = $cart->total_price + 50;
-                $discounted = 'NO';
-            }
+            $total_price = $cart->total_price + $request->deliveryFee;
+            $discounted = 'NO';
 
             // dd($subtotal, $total_price, $discounted);
             // Create a new order
@@ -112,11 +122,11 @@ class OrderController extends Controller
                 'MOP' => $request->MOP,
                 'POP' => $POP,
                 'type' => 'PRODUCTS',
-                'paymentstatus' => 'NOT PAYED',
+                'paymentstatus' => 'NOT PAID',
                 'status' => 'PLACED',
                 // Add other order-related fields as needed
             ]);
-    
+            
             // Attach products from the user's cart to the order
             $productIdArray = $cart->products->pluck('id')->toArray();
             $quantitiesArray = $cart->products->pluck('pivot.quantity')->toArray();
@@ -127,7 +137,18 @@ class OrderController extends Controller
                 $syncData[$productId] = ['quantity' => $quantitiesArray[$index]];
             }
             
+            foreach ($cart->products as $prod) {
+                $orderline = New Orderline;
+                $orderline->order_id = $order->id;
+                $orderline->name = $prod->name;
+                $orderline->price = $prod->price;
+                $orderline->image = $prod->img;
+                $orderline->quantity = $prod->pivot->quantity;  
+                $orderline->save();
+            }
+            
             $order->products()->sync($syncData);
+
             
             // Update the order's total price based on the attached products
             // $order->updateTotalPrice();
@@ -136,8 +157,7 @@ class OrderController extends Controller
             $cart->products()->detach();
             $cart->updateTotalPrice(); // Make sure to implement this method in your Cart model
             session()->put('cart', []);
-            // Redirect or return a response as needed
-            // return view('customer.confirmation', compact('order')); 
+
             return redirect()->route('confirmation', ['order' => $order->id]);
         } else {
             // Handle the case where the user does not have a cart
@@ -173,9 +193,7 @@ class OrderController extends Controller
     public function update(Request $request, string $id)
     {
 
-        // dd($request);
         $order = Order::find($id);
-
         if($order->type === 'PACKAGE')
         {
             $request->validate([
@@ -210,6 +228,15 @@ class OrderController extends Controller
 
         if($order->type === 'PACKAGE')
         {
+            if ($order->discounted == 'NO' && $request->discounted == 'YES') {
+                $order->discounted = $request->discounted;
+                $order->total_price = $order->subtotal * 0.8;
+            }
+            
+            if ($order->discounted == 'YES' && $request->discounted == 'NO') {
+                $order->discounted = $request->discounted;
+                $order->total_price = $order->subtotal;
+            }
             $order->message = $request->message;
             $order->formalin = $request->formalin;
             $order->cascketsize = $request->cascketsize;
@@ -220,12 +247,24 @@ class OrderController extends Controller
             $order->locationto = $request->locationto;
             $order->durationfrom = $request->durationfrom;
             $order->durationto = $request->durationto;
+            $order->extensiondays = $request->extensiondays;
+            $order->extensionprice = $request->extensionprice;
+            $order->extensionpayment = $request->extensionpayment;
         }
         // dd($order);
         $order->update();
 
-        return redirect()->back()->with('status', 'Status Updated');
+        return redirect()->back()->with('status', 'Order Updated');
 
+    }
+
+    public function cancelOrder(Order $order)
+    {
+        // dd('CANCEL');
+        $order->status = 'CANCELLED';
+        $order->save();
+
+        return redirect()->route('customer.profile')->with('cancel', 'Order Cancelled!');
     }
 
     /**

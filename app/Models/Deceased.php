@@ -28,13 +28,17 @@ class Deceased extends Model
         'occupation',
         'namecemetery',
         'addresscemetery',
-        'nameFather',
-        'nameMother',
+        'image',
+        'idtype',
+        'validid',
+        'transferpermit',
+        'swabtest',
+        'proofofdeath',
     ];
 
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->hasOne(Order::class);
     }
 
     public function customer()

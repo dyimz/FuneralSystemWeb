@@ -45,4 +45,3 @@
   <script src="../../../../../../../../../../../../../../../../../../../../../../../assets/js/app-academy-course-details.js"></script>
   <script src="../../../../../../../../../../../../../../../../../../../../../../../assets/vendor/libs/plyr/plyr.js"></script>
 
-

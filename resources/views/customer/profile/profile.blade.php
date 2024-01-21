@@ -29,6 +29,17 @@
                         <!-- Orders table -->
                         <div class="card mb-4">
                             <h5 class="card-header">My Orders</h5>
+
+                            @if(session('cancel'))
+                            <div class="card-body">
+                                <div class="alert alert-primary alert-dismissible" role="alert">
+                                    {{ session('cancel') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                    </button>
+                                </div>
+                            </div>
+                            @endif
+                            
                             <div class="card-datatable table-responsive">
                                 <table class="table" id="orders-table">
                                 <thead>
@@ -57,7 +68,7 @@
                         <!-- /Orders table -->
 
                         <div class="card mb-4">
-                            <h5 class="card-header">Deceased</h5>
+                            <h5 class="card-header">Registered Deceased</h5>
 
                             <div class="card-datatable table-responsive">
                                 <table class="table" id="dead-table">
@@ -120,7 +131,22 @@ $(document).ready(function () {
         columns: [
             {data: 'id', name: 'id'},
             {data: 'type', name: 'type'},
-            {data: 'status', name: 'status'},
+            {
+                data: 'status',
+                name: 'status',
+                render: function (data, type, full, meta) {
+                  // Assuming 'status' contains the status text
+                  if (data === 'PLACED') {
+                    return '<span class="badge bg-label-primary">' + data + '</span>';
+                  } else if (data === 'PREPARING'){
+                    return '<span class="badge bg-label-warning">' + data + '</span>';
+                  } else if (data === 'ON-GOING') {
+                    return '<span class="badge bg-label-info">' + data + '</span>';
+                  } else {
+                    return '<span class="badge bg-label-success">' + data + '</span>';
+                  }
+                }
+            },
             {data: 'total_price', name: 'total_price'},
             {data: 'paymentstatus', name: 'paymentstatus'},
             {

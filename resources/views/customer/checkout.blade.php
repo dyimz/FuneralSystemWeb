@@ -94,6 +94,18 @@
                 </div>
               @endif
 
+              @php
+                $user = auth()->user();
+                $cart = $user->cart;
+                $kart = session()->get('cart', []);
+                $kart[$cart->id] = [
+                    'id' => $cart->id,
+                    'total_price' => $cart->total_price,
+                    'items' => $cart->products,
+                ];
+                session()->put('cart', $kart);
+              @endphp
+              
               <!-- Shopping bag -->
               <h5>My Shopping Bag (
                 @php
@@ -170,16 +182,8 @@
                     @endforeach
                   @endif
 
-                  @if(auth()->user()->customer->verified)
-                    <dt class="col-6 fw-normal">Discount</dt>
-                    <dd class="col-6 text-end">- {{$details['total_price'] * 0.2}}</dd>
-                  @else
-                    <dt class="col-6 fw-normal">Discount</dt>
-                    <dd class="col-6 text-end">- 0</dd>
-                  @endif
-
                   <dt class="col-6 fw-normal">Delivery Charges</dt>
-                  <dd class="col-6 text-end">₱ 50</dd>
+                  <dd class="col-6 text-end">₱ {{$deliveryFee}}</dd>
                 </dl>
 
                 <hr class="mx-n4">
@@ -188,13 +192,7 @@
 
                   @if(session('cart'))
                     @foreach(session('cart') as $id => $details)
-                    
-                      @if(auth()->user()->customer->verified)
-                        <dd class="col-6 fw-medium text-end mb-0">₱ {{($details['total_price'] * 0.8) + 50}}</dd>
-                      @else
-                        <dd class="col-6 fw-medium text-end mb-0">₱ {{$details['total_price'] + 50}}</dd>
-                      @endif
-
+                        <dd class="col-6 fw-medium text-end mb-0">₱ {{$details['total_price'] + $deliveryFee}}</dd>
                     @endforeach
                   @endif
                   
@@ -313,27 +311,15 @@
                     <dd class="col-6 text-end">₱ {{$details['total_price']}}</dd>
                   @endforeach
 
-                  @if(auth()->user()->customer->verified)
-                    <dt class="col-6 fw-normal">Discount</dt>
-                    <dd class="col-6 text-end">- {{$details['total_price'] * 0.2}}</dd>
-                  @else
-                    <dt class="col-6 fw-normal">Discount</dt>
-                    <dd class="col-6 text-end">- 0</dd>
-                  @endif
-
                   <dt class="col-6 fw-normal">Delivery Charges</dt>
-                  <dd class="col-6 text-end">₱ 50</dd>
+                  <dd class="col-6 text-end">₱ {{$deliveryFee}}</dd>
 
                 </dl>
                 <hr class="mx-n4">
                 <dl class="row mb-0">
                   <dt class="col-6">Total</dt>
                   @foreach(session('cart') as $id => $details)
-                    @if(auth()->user()->customer->verified)
-                      <dd class="col-6 fw-medium text-end mb-0">₱ {{($details['total_price'] * 0.8) + 50}}</dd>
-                    @else
-                      <dd class="col-6 fw-medium text-end mb-0">₱ {{$details['total_price'] + 50}}</dd>
-                    @endif
+                      <dd class="col-6 fw-medium text-end mb-0">₱ {{$details['total_price'] + $deliveryFee}}</dd>
                   @endforeach
                 </dl>
                 
@@ -366,6 +352,7 @@
                   </li>
 
                   <input type="hidden" name="MOP" id="MOP" value="">
+                  <input type="hidden" name="deliveryFee" id="deliveryFee" value="{{$deliveryFee}}">
                 </ul>
 
                 <!-- <div class="row g-6">
@@ -412,17 +399,8 @@
                   <dt class="col-6 fw-normal">Order Total</dt>
                   @foreach(session('cart') as $id => $details)
                     <dd class="col-6 text-end">₱ {{$details['total_price']}}</dd>
-
-                    @if(auth()->user()->customer->verified)
-                      <dt class="col-6 fw-normal">Discount</dt>
-                      <dd class="col-6 text-end">- {{$details['total_price'] * 0.2}}</dd>
-                    @else
-                      <dt class="col-6 fw-normal">Discount</dt>
-                      <dd class="col-6 text-end">- 0</dd>
-                    @endif
-
                       <dt class="col-6 fw-normal">Delivery Charge</dt>
-                      <dd class="col-6 text-end">₱ 50</dd>
+                      <dd class="col-6 text-end">₱ {{$deliveryFee}}</dd>
 
                   @endforeach
                 </dl>
@@ -431,11 +409,7 @@
                   <dt class="col-6 mb-3">Total</dt>
 
                   @foreach(session('cart') as $id => $details)
-                    @if(auth()->user()->customer->verified)
-                      <dd class="col-6 fw-medium text-end mb-0">₱ {{($details['total_price'] * 0.8) + 50}}</dd>
-                    @else
-                      <dd class="col-6 fw-medium text-end mb-0">₱ {{$details['total_price'] + 50}}</dd>
-                    @endif
+                      <dd class="col-6 fw-medium text-end mb-0">₱ {{$details['total_price'] + $deliveryFee}}</dd>
                   @endforeach
 
                   <dt class="col-6 fw-normal">Deliver to:</dt>

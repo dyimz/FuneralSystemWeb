@@ -117,7 +117,22 @@ $(document).ready(function () {
         columns: [
             {data: 'id', name: 'id'},
             {data: 'type', name: 'type'},
-            {data: 'status', name: 'status'},
+            {
+                data: 'status',
+                name: 'status',
+                render: function (data, type, full, meta) {
+                  // Assuming 'status' contains the status text
+                  if (data === 'PLACED') {
+                    return '<span class="badge bg-label-primary">' + data + '</span>';
+                  } else if (data === 'PREPARING'){
+                    return '<span class="badge bg-label-warning">' + data + '</span>';
+                  } else if (data === 'ON-GOING') {
+                    return '<span class="badge bg-label-info">' + data + '</span>';
+                  } else {
+                    return '<span class="badge bg-label-success">' + data + '</span>';
+                  }
+                }
+            },
             {data: 'total_price', name: 'total_price'},
             {data: 'paymentstatus', name: 'paymentstatus'},
             {

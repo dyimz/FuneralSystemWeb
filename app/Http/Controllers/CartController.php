@@ -12,8 +12,6 @@ class CartController extends Controller
 
     public function addToCart(Request $request, Product $product)
     {
-
-        
         // dd(session('cart'));
         // Retrieve the authenticated user
         $user = auth()->user();

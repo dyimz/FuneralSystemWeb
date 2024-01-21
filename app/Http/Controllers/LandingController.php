@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Package;
 use App\Models\Order;
+use App\Models\Deceased;
 use DB;
 
 class LandingController extends Controller
@@ -16,8 +17,56 @@ class LandingController extends Controller
     public function index()
     {
         $packages = Package::orderBy('name', 'asc')->get();
+        $deceased = Deceased::all();
 
-        return view('welcome', compact('packages'));
+        $groups = [];
+
+        $chunkSize = 3;
+        $groupIndex = 0;
+        $innerIndex = 0;
+
+        foreach ($deceased as $record) {
+            $groups[$groupIndex][$innerIndex] = $record;
+
+            $innerIndex++;
+
+            // Check if we need to move to the next group
+            if ($innerIndex == $chunkSize) {
+                $innerIndex = 0;
+                $groupIndex++;
+            }
+        }
+
+        // if (!empty($groups)) {
+        //     // Use array_slice to skip the first array
+        //     $remainingGroups = array_slice($groups, 1);
+        
+        //     foreach ($remainingGroups as $groupIndex => $group) {
+
+        
+        //         foreach ($group as $recordIndex => $record) {
+               
+        //         }
+        //     }
+        // }
+        // dd();
+
+        // foreach($groups as $group)
+        // {
+        //     foreach($group as $dead)
+        //     {
+        //         dump($dead->fname);
+        //     }
+        // }
+
+        // dd();
+        return view('welcome', compact('packages', 'groups'));
+    }
+
+    public function showObituary($id)
+    {
+        $dead = Deceased::find($id);
+        return view('showObituary', compact('dead'));
     }
 
     public function confirmation(Order $order)
@@ -33,7 +82,7 @@ class LandingController extends Controller
 
     public function products()
     {
-        
+
         // dd(session('cart'));
         // session()->forget('cart');
         $products = Product::orderBy('name', 'asc')->get();
@@ -52,7 +101,8 @@ class LandingController extends Controller
 
     public function checkout()
     {
-        return view('customer.checkout');
+        $deliveryFee = 90;
+        return view('customer.checkout', compact('deliveryFee'));
     }
 
     /**

@@ -4,6 +4,57 @@
    Funeral Website
 @endsection
 
+@section('header')
+<link href='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
+
+<!-- Include jQuery (required by Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+
+<!-- Include Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+
+<script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js'></script>
+
+
+
+
+<style>
+.round-image {
+    border-radius: 50%;
+    width: 75%;
+    height: auto;
+    padding: 20px;
+    display: block; /* Make the image a block element */
+    margin: auto;
+}
+
+.card {
+  background-color: rgba(62, 134, 209, 0.5);
+  border-radius: 20px;
+}
+
+.card-title {
+  font-family: "Citadel Script W01";
+  font-size: 50px;
+  color: white;
+  text-align: center;
+}
+
+.card-text {
+  text-align: center;
+  font-family: "Helvetica", Sans-Serif;
+  color: white;
+}
+a {
+    text-decoration: none;
+}
+</style>
+@endsection
 @section('content')
   <!-- Hero: Start -->
   <section id="hero-animation">
@@ -31,37 +82,6 @@
     <!-- What people say slider: Start -->
     <div class="container" >
       <div class="row align-items-center gx-0 gy-4 g-lg-5">
-
-        <!-- <div class="col-md-6 col-lg-7 col-xl-9">
-          <div class="swiper-reviews-carousel overflow-hidden mb-5 pb-md-2 pb-md-3">
-            <div class="swiper" id="swiper-reviews">
-              <div class="swiper-wrapper">
-
-                @foreach($packages as $pack)
-                  <div class="swiper-slide">
-                    <div class="card h-100">
-                      <div class="card-body text-body d-flex flex-column justify-content-between h-100">
-                        <div class="mb-3">
-                          <img src="./../../../../../images/PIKES-logo.png" width="50" height="50" alt="client logo" />
-                          <h5 class="mb-3">{{$pack->name}}</h5>
-                        </div>
-                        <p>
-                          “Vuexy is hands down the most useful front end Bootstrap theme I've ever used. I can't wait
-                          to use it again for my next project.”
-                        </p>
-
-                      </div>
-                    </div>
-                  </div>
-                @endforeach
-
-
-              </div>
-              <div class="swiper-button-next"></div>
-              <div class="swiper-button-prev"></div>
-            </div>
-          </div>
-        </div> -->
 
         <div class="col-md-12 col-lg-12 col-xl-12">
           <div class="text-center mb-1">
@@ -121,152 +141,6 @@
                   </div>
                 @endforeach
 
-                <!-- <div class="swiper-slide">
-                  <div class="card h-100">
-                    <div class="card-body text-body d-flex flex-column justify-content-between h-100">
-                      <div class="mb-3">
-                        <img src="../../assets/img/front-pages/branding/logo-2.png" alt="client logo" class="client-logo img-fluid" />
-                      </div>
-                      <p>
-                        “I've never used a theme as versatile and flexible as Vuexy. It's my go to for building
-                        dashboard sites on almost any project.”
-                      </p>
-                      <div class="text-warning mb-3">
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="avatar me-2 avatar-sm">
-                          <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
-                        </div>
-                        <div>
-                          <h6 class="mb-0">Eugenia Moore</h6>
-                          <p class="small text-muted mb-0">Founder of Hubspot</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="card h-100">
-                    <div class="card-body text-body d-flex flex-column justify-content-between h-100">
-                      <div class="mb-3">
-                        <img src="../../assets/img/front-pages/branding/logo-3.png" alt="client logo" class="client-logo img-fluid" />
-                      </div>
-                      <p>
-                        This template is really clean & well documented. The docs are really easy to understand and
-                        it's always easy to find a screenshot from their website.
-                      </p>
-                      <div class="text-warning mb-3">
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="avatar me-2 avatar-sm">
-                          <img src="../../assets/img/avatars/3.png" alt="Avatar" class="rounded-circle" />
-                        </div>
-                        <div>
-                          <h6 class="mb-0">Curtis Fletcher</h6>
-                          <p class="small text-muted mb-0">Design Lead at Dribbble</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="card h-100">
-                    <div class="card-body text-body d-flex flex-column justify-content-between h-100">
-                      <div class="mb-3">
-                        <img src="../../assets/img/front-pages/branding/logo-4.png" alt="client logo" class="client-logo img-fluid" />
-                      </div>
-                      <p>
-                        All the requirements for developers have been taken into consideration, so I’m able to build
-                        any interface I want.
-                      </p>
-                      <div class="text-warning mb-3">
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bx-star bx-sm"></i>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="avatar me-2 avatar-sm">
-                          <img src="../../assets/img/avatars/4.png" alt="Avatar" class="rounded-circle" />
-                        </div>
-                        <div>
-                          <h6 class="mb-0">Sara Smith</h6>
-                          <p class="small text-muted mb-0">Founder of Continental</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="card h-100">
-                    <div class="card-body text-body d-flex flex-column justify-content-between h-100">
-                      <div class="mb-3">
-                        <img src="../../assets/img/front-pages/branding/logo-5.png" alt="client logo" class="client-logo img-fluid" />
-                      </div>
-                      <p>
-                        “I've never used a theme as versatile and flexible as Vuexy. It's my go to for building
-                        dashboard sites on almost any project.”
-                      </p>
-                      <div class="text-warning mb-3">
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="avatar me-2 avatar-sm">
-                          <img src="../../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                        </div>
-                        <div>
-                          <h6 class="mb-0">Eugenia Moore</h6>
-                          <p class="small text-muted mb-0">Founder of Hubspot</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="card h-100">
-                    <div class="card-body text-body d-flex flex-column justify-content-between h-100">
-                      <div class="mb-3">
-                        <img src="../../assets/img/front-pages/branding/logo-6.png" alt="client logo" class="client-logo img-fluid" />
-                      </div>
-                      <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam nemo mollitia, ad eum
-                        officia numquam nostrum repellendus consequuntur!
-                      </p>
-                      <div class="text-warning mb-3">
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bxs-star bx-sm"></i>
-                        <i class="bx bx-star bx-sm"></i>
-                      </div>
-                      <div class="d-flex align-items-center">
-                        <div class="avatar me-2 avatar-sm">
-                          <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
-                        </div>
-                        <div>
-                          <h6 class="mb-0">Sara Smith</h6>
-                          <p class="small text-muted mb-0">Founder of Continental</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-
               </div>
               <div class="swiper-button-next"></div>
               <div class="swiper-button-prev"></div>
@@ -294,23 +168,107 @@
 
   <!-- Useful features: Start -->
   <section id="landingFeatures" class="section-py landing-features">
+
     <div class="container">
 
       <h3 class="text-center mb-1">
         <span class="section-title">Obituaries</span>
       </h3>
 
-      <div class="features-icon-wrapper row gx-0 gy-4 g-sm-5">
+      <div class="row">
+      
+          <div class="col-12">
 
+            <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
 
+              <div class="carousel-inner">
 
-      </div>
+              @if (!empty($groups)) 
+                @php
+                  $firstGroup = reset($groups);
+                @endphp
+                <div class="carousel-item active">
+       
+                      <div class="row">
+                      @foreach ($firstGroup as $recordIndex => $record) 
+                      <div class="col-md-4 mb-3">
+                        <a href="{{route('landing.showObituary', $record->id)}}">
+                          <div class="card">
+                              <img class="img-fluid round-image" alt="100%x280" src="{{asset($record->image)}}">
+                              <div class="card-body">
+                                  <h4 class="card-title" >{{$record->fname}} {{$record->lname}}</h4>
+                                  @php
+                                      $born = \Carbon\Carbon::parse($record->dateofbirth);
+                                      $dateofbirth = $born->format('F d, Y');
+                                      $died = \Carbon\Carbon::parse($record->dateofdeath);
+                                      $dateofdeath = $died->format('F d, Y');
+                                  @endphp
+                                  <p class="card-text">Born: {{$dateofbirth}}</p>
+                                  <p class="card-text">Died: {{$dateofdeath}}</p>
+                              </div>
+                          </div>
+                        </a>
+                      </div>
+                      @endforeach
+                      </div>
+                </div>
+              @endif
+
+              @if (!empty($groups))
+                @php
+                  $remainingGroups = array_slice($groups, 1);
+                @endphp
+                @foreach ($remainingGroups as $groupIndex => $group)
+                <div class="carousel-item">
+                  <div class="row">
+
+                    @foreach ($group as $recordIndex => $record)
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img class="img-fluid round-image" alt="100%x280" src="{{asset($record->image)}}">
+                            <div class="card-body">
+                                <h4 class="card-title">{{$record->fname}} {{$record->lname}}</h4>
+                                @php
+                                      $born = \Carbon\Carbon::parse($record->dateofbirth);
+                                      $dateofbirth = $born->format('F d, Y');
+                                      $died = \Carbon\Carbon::parse($record->dateofdeath);
+                                      $dateofdeath = $died->format('F d, Y');
+                                  @endphp
+                                  <p class="card-text">Born: {{$dateofbirth}}</p>
+                                  <p class="card-text">Died: {{$dateofdeath}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+
+                  </div>
+                </div>
+                @endforeach
+               
+              @endif
+
+              </div>
+
+            </div>
+
+          </div>
+          <div class="col-12 text-left">
+              <a class="btn btn-label-primary reviews-btn" style="color:white;" href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                  <i class="bx bx-chevron-left bx-sm"></i>
+              </a>
+              <a class="btn btn-label-primary reviews-btn " style="color:white;" href="#carouselExampleIndicators2" role="button" data-slide="next">
+                  <i class="bx bx-chevron-right bx-sm"></i>
+              </a>
+          </div>
+
+        </div>
     </div>
+
   </section>
   <!-- Useful features: End -->
-
-
-  <!-- Contact Us: Start -->
+  
+  
+    <!-- Contact Us: Start -->
   <section id="landingContact" class="section-py bg-body landing-contact">
     <div class="container">
 
@@ -322,4 +280,3 @@
 
   </section>
   <!-- Contact Us: End -->
-

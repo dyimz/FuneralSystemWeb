@@ -48,7 +48,7 @@ class AuthenticatedSessionController extends Controller
             
             session()->put('cart', $kart);
             
-            return redirect()->route('customer.profile', $user->customer->id);
+            return redirect()->route('customer.profile', $user->customer ->id);
         } 
         else{
             return redirect()->route('login')->with('error', 'Unauthorized access.');

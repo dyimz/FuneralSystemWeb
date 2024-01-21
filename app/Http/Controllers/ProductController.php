@@ -149,7 +149,7 @@ class ProductController extends Controller
                 'stock.integer' => 'The stock must be a whole number.',
         ]);
         
-        try{
+        // try{
             
             $updates = [
                 'name' => $request->name,
@@ -175,10 +175,10 @@ class ProductController extends Controller
             
             return redirect()->route('products.index');
 
-        } catch (\Exception $e) {
-            $errorMessage = "An error occurred while processing your request. Please try again later."; // Custom error message
-            return back()->withErrors($errorMessage)->withInput();
-        }
+        // } catch (\Exception $e) {
+        //     $errorMessage = "An error occurred while processing your request. Please try again later."; // Custom error message
+        //     return back()->withErrors($errorMessage)->withInput();
+        // }
     }
 
     /**
