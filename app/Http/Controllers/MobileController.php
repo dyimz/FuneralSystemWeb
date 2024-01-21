@@ -244,10 +244,26 @@ class MobileController extends Controller
 
     public function packageInfo($id)
     {
-        // Log::info($id);
         $packages = Package::where('id', $id)->first();
-        // Log::info($packages);
-        return response()->json($packages);
+        $inclusions = "";
+        $pkcgs = $packages->services;
+
+        foreach ($pkcgs as $pkcg) {
+            $inc = $pkcg->name;
+            $inclusions = $inclusions.$inc.", ";
+            
+        }
+
+        $packagez = ['id' => $packages->id,
+                        'name' => $packages->name,
+                        'description' => $packages->description,
+                        'inclusions' => $packages->inclusions,
+                        'img' => $packages->img,
+                        'price' => $packages->price,
+                        'category' => $packages->category,
+                        'inclusions' => $inclusions];
+
+        return response()->json($packagez);
     }
 
     public function addToCart(Request $request)
