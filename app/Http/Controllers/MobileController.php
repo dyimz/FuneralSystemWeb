@@ -385,6 +385,88 @@ class MobileController extends Controller
         return response()->json($orders);
     }
 
+    public function inquirePackage(Request $request)
+    {
+        Log::info($request);
+        $customer = Customer::where('id', $request->customerID)->first();           // customer info
+        $user = User::where('id', $customer->user_id)->first();                     // user info
+
+        $deceased = Deceased::create([
+            'customer_id' => $request->customerID,
+            'fname' => $request->fname,
+            'mname' => $request->mname,
+            'lname' => $request->lname,
+            'relationship' => $request->relationship,
+            'causeofdeath' => $request->causeofdeath,
+            'sex' => $request->sex,
+            'religion' => $request->religion,
+            'age' => $request->age,
+            'dateofbirth' => $request->dateofbirth,
+            'dateofdeath' => $request->dateofdeath,
+            'placeofdeath' => $request->placeofdeath,
+            'citizenship' => $request->citizenship,
+            'address' => $request->address,
+            'civilstatus' => $request->civilstatus,
+            'occupation' => $request->occupation,
+            'namecemetery' => $request->namecemetery,
+            'addresscemetery' => $request->addresscemetery,
+            'nameFather' => $request->nameFather,
+            'nameMother' => $request->nameMother,
+            'idtype' => $request->idType,
+            'validid' => $request->validId,
+            'image' => $request->image,
+            'transferpermit' => $request->transferPermit,
+            'swabtest' => $request->swabTest,
+            'proofofdeath' => $request->proofOfDeath,
+            'description' => $request->description,
+        ]);
+        $deceasedId = $deceased->id;
+
+
+        $order = new Order;
+        $order->user_id = $user->id;
+        $order->name = $user->name;
+        $order->address = $customer->address;
+        $order->contact = $customer->contact;
+        $order->discounted = $request->discounted;
+        $order->subtotal = $request->subtotal;
+        $order->total_price = $request->total_price;
+        $order->MOP = $request->MOP;
+        $order->POP = $request->POP;
+        $order->type = "PACKAGE";
+        $order->status = "PLACED";
+        $order->deceased_id = $deceasedId;
+        $order->package_id = $request->packageID;
+        $order->message = $request->message;
+        $order->cascketsize = $request->cascketsize;
+        $order->cremate = $request->cremate;
+        $order->formalin = $request->formalin;
+        $order->memorialproducts = $request->memorialproducts;
+        $order->makeup = $request->makeup;
+        $order->note = $request->note;
+        $order->locationfrom = $request->locationfrom;
+        $order->locationto = $request->locationto;
+        $order->durationfrom = $request->durationfrom;
+        $order->durationto = $request->durationto;
+        $order->paymentstatus = $request->paymentstatus;
+        $order->cancelled = "NO";
+        $order->extensiondays = 0;
+        $order->extensionprice = 0;
+        $order->extensionpayment = null;
+        $order->save();
+
+        foreach($order->package->services as $service)
+        {
+            $orderline = New Orderline;
+            $orderline->order_id = $order->id;
+            $orderline->name = $service->name;
+            $orderline->price = $service->price;
+            $orderline->save();
+        }
+
+        return response()->json(['message' => 'success'], 200);
+    }
+
     
 }
 
