@@ -120,7 +120,7 @@ class MobileController extends Controller
     public function deceasedList($id)
     {
         Log::info($id);
-        $deceaseds = Deceased::where('customerID', $id)->get();
+        $deceaseds = Deceased::where('customer_id', $id)->get();
         Log::info($deceaseds);
         return response()->json($deceaseds);
     }
@@ -215,21 +215,21 @@ class MobileController extends Controller
 
     public function EmbalmingpackagesList()
     {
-        $packages = Package::where('category', 'Embalming')->get();
+        $packages = Package::where('category', 'EMBALMING')->get();
         // Log::info($packages);
         return response()->json($packages);
     }
 
     public function CremationpackagesList()
     {
-        $packages = Package::where('category', 'Cremation')->get();
+        $packages = Package::where('category', 'CREMATION')->get();
         // Log::info($packages);
         return response()->json($packages);
     }
 
     public function AllinpackagesList()
     {
-        $packages = Package::where('category', 'Allin')->get();
+        $packages = Package::where('category', 'ALL IN')->get();
         // Log::info($packages);
         return response()->json($packages);
     }
@@ -251,7 +251,6 @@ class MobileController extends Controller
         foreach ($pkcgs as $pkcg) {
             $inc = $pkcg->name;
             $inclusions = $inclusions.$inc.", ";
-            
         }
 
         $packagez = ['id' => $packages->id,
@@ -388,3 +387,49 @@ class MobileController extends Controller
 
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

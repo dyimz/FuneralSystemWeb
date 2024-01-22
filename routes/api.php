@@ -46,5 +46,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/cartDelete', [MobileController::class, 'cartDelete']);
     Route::post('/checkout', [MobileController::class, 'checkout']);
     Route::get('/orderList/{id}', [MobileController::class, 'orderList']);
+    Route::post('/inquirePackage', [MobileController::class, 'inquirePackage']);
     
 });
